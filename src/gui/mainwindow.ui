@@ -41,7 +41,7 @@
       <item>
        <layout class="QHBoxLayout" name="InputsContainer">
         <item>
-         <layout class="QVBoxLayout" name="Input2Container">
+         <layout class="QVBoxLayout" name="Input1Container">
           <property name="leftMargin">
            <number>20</number>
           </property>
@@ -71,16 +71,12 @@
            <widget class="QLineEdit" name="input1"/>
           </item>
           <item>
-           <widget class="QLabel" name="input1_equation">
-            <property name="text">
-             <string>f(x) = </string>
-            </property>
-           </widget>
+           <widget class="QWidget" name="input1_equation" native="true"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="Input1Container">
+         <layout class="QVBoxLayout" name="Input2Container">
           <property name="leftMargin">
            <number>20</number>
           </property>
@@ -110,11 +106,7 @@
            <widget class="QLineEdit" name="input2"/>
           </item>
           <item>
-           <widget class="QLabel" name="input2_equation">
-            <property name="text">
-             <string>g(x) = </string>
-            </property>
-           </widget>
+           <widget class="QWidget" name="input2_equation" native="true"/>
           </item>
          </layout>
         </item>
@@ -147,16 +139,6 @@
         <property name="bottomMargin">
          <number>5</number>
         </property>
-        <item>
-         <widget class="QWidget" name="graph" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
         <item alignment="Qt::AlignmentFlag::AlignRight">
          <widget class="QTableWidget" name="solutions_table">
           <property name="sizePolicy">
@@ -167,7 +149,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>100</width>
+            <width>200</width>
             <height>16777215</height>
            </size>
           </property>
@@ -176,6 +158,16 @@
             <string>Solutions</string>
            </property>
           </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="graph" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
          </widget>
         </item>
        </layout>
@@ -196,7 +188,7 @@
          <x>0</x>
          <y>0</y>
          <width>791</width>
-         <height>195</height>
+         <height>211</height>
         </rect>
        </property>
       </widget>
