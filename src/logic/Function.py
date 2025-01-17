@@ -23,12 +23,12 @@ class Function:
 
     def draw_function(self):
         fig, ax = plt.subplots()
-        ax.text(0.05, 0.5, self.text, fontsize=20, ha='left', va='center')
+        ax.text(0, 0.5, self.text, fontsize=20, ha='left', va='center')
         ax.axis('off')
         plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
         graph = FigureCanvasQTAgg(fig)
-        graph.setMaximumHeight(100)
-        self.container.itemAt(2).widget().setParent(None)
+        graph.setMaximumHeight(50)
+        self.container.itemAt(0).widget().setParent(None)
         self.container.addWidget(graph)
         plt.close(fig)
 

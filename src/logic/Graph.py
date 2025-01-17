@@ -45,11 +45,13 @@ def draw_graph(function_1, function_2, solutions):
             y_values.append(lam_x(value).evalf())
     plt.plot(x_values, y_values, label='g(x)')
 
-    y_values = []
-    for value in solutions:
-        y_values.append(lam_x(value).evalf())
-    plt.scatter(list(solutions), y_values, color='red', label='solutions', s=100, zorder=5)
-    
+    for index, value in enumerate(solutions):
+        y_value = lam_x(value).evalf()
+        alignment = "top" if y_value >= 0 else "bottom"
+        plt.text(value, 0, "p" + str(index+1), fontsize=12, ha='center', va=alignment)
+        plt.plot([value, value], [0, y_value], color='red')
+        plt.scatter(value, y_value, color='red', s=50, zorder=5)
+
     plt.legend()
     return fig
 
