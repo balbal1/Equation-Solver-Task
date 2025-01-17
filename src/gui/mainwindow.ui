@@ -132,7 +132,7 @@ border-bottom: 3px solid black;</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>500</width>
+              <width>700</width>
               <height>16777215</height>
              </size>
             </property>
@@ -263,7 +263,7 @@ border-radius: 5px</string>
             </property>
             <property name="maximumSize">
              <size>
-              <width>500</width>
+              <width>700</width>
               <height>16777215</height>
              </size>
             </property>
@@ -339,6 +339,15 @@ border-radius: 5px</string>
              </property>
              <property name="leftMargin">
               <number>15</number>
+             </property>
+             <property name="topMargin">
+              <number>1</number>
+             </property>
+             <property name="rightMargin">
+              <number>1</number>
+             </property>
+             <property name="bottomMargin">
+              <number>1</number>
              </property>
              <item>
               <layout class="QHBoxLayout" name="input2_function">
@@ -474,10 +483,25 @@ QPushButton:hover {
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background: white;
-border-radius: 10px
-</string>
+          <string notr="true">QTableWidget {
+	background: white;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	border: 1px solid black;
+}
+
+QHeaderView::section {
+	background: #ebebeb;
+	border-bottom: 1px solid black;
+}
+
+QHeaderView {	
+	border-radius: 10px;
+}</string>
          </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Point</string>

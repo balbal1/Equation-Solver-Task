@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QTableWidgetItem
+from PySide2.QtWidgets import QTableWidgetItem, QFrame
 from PySide2.QtUiTools import QUiLoader
 from logic.Solver import solver
 from logic.Graph import draw_graph
@@ -16,6 +16,9 @@ class MainWindow:
     def __init__(self, window):
 
         self.window = window
+
+        self.window.solution_table.setColumnWidth(0, 100)
+        self.window.solution_table.setColumnWidth(1, 248)
 
         self.function_1 = Function("f", self.window.input1, self.window.input1_function)
         self.function_2 = Function("g", self.window.input2, self.window.input2_function)

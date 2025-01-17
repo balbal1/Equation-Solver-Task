@@ -27,7 +27,7 @@ class Function:
         ax.axis('off')
         plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
         graph = FigureCanvasQTAgg(fig)
-        graph.setMaximumHeight(50)
+        graph.setMaximumHeight(80)
         self.container.itemAt(0).widget().setParent(None)
         self.container.addWidget(graph)
         plt.close(fig)
