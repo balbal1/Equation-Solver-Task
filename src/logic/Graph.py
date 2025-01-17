@@ -1,6 +1,6 @@
 from sympy import symbols
-from numpy import linspace, array
-from sympy import lambdify
+from numpy import linspace
+from sympy import lambdify, Float
 import matplotlib.pyplot as plt
 
 def draw_graph(function_1, function_2, solutions):
@@ -10,7 +10,6 @@ def draw_graph(function_1, function_2, solutions):
 
     fig, ax = plt.subplots()
 
-    # ax.set_aspect('equal')
     ax.grid(True, which='both')
 
     # set the x-spine (see below for more info on `set_position`)
@@ -33,7 +32,7 @@ def draw_graph(function_1, function_2, solutions):
     for value in x_domain:
         if function_1.get_domain().contains(value):
             x_values.append(value)
-            y_values.append(lam_x(value).evalf())
+            y_values.append(Float(lam_x(value)).evalf())
     plt.plot(x_values, y_values, label='f(x)')
 
     lam_x = lambdify(x, function_2.expression, modules=['sympy'])
@@ -42,11 +41,11 @@ def draw_graph(function_1, function_2, solutions):
     for value in x_domain:
         if function_2.get_domain().contains(value):
             x_values.append(value)
-            y_values.append(lam_x(value).evalf())
+            y_values.append(Float(lam_x(value)).evalf())
     plt.plot(x_values, y_values, label='g(x)')
 
     for index, value in enumerate(solutions):
-        y_value = lam_x(value).evalf()
+        y_value = Float(lam_x(value)).evalf()
         alignment = "top" if y_value >= 0 else "bottom"
         plt.text(value, 0, "p" + str(index+1), fontsize=12, ha='center', va=alignment)
         plt.plot([value, value], [0, y_value], color='red')
@@ -56,10 +55,13 @@ def draw_graph(function_1, function_2, solutions):
     return fig
 
 def center_graph(solutions):
+    if solutions == []:
+        return [Float(-15), Float(15)]
+    
     minimum = min(0, min(solutions))
     maximum = max(0, max(solutions))
     
-    diff = maximum - minimum
+    diff = max(maximum - minimum, 15)
     minimum -= diff * 0.2
     maximum += diff * 0.2
     
