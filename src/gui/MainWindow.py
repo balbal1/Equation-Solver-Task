@@ -17,8 +17,8 @@ class MainWindow:
 
         self.window = window
 
-        self.function_1 = Function("f", self.window.input1, self.window.Input1Container)
-        self.function_2 = Function("g", self.window.input2, self.window.Input2Container)
+        self.function_1 = Function("f", self.window.input1, self.window.input1_function)
+        self.function_2 = Function("g", self.window.input2, self.window.input2_function)
 
         self.window.solve_button.clicked.connect(self.solve_handler)
 
@@ -28,15 +28,16 @@ class MainWindow:
 
         figure = draw_graph(self.function_1, self.function_2, solutions)
 
-        for index in range(self.window.solutions_table.rowCount(), -1, -1):
-            self.window.solutions_table.removeRow(index)
+        for index in range(self.window.solution_table.rowCount(), -1, -1):
+            self.window.solution_table.removeRow(index)
 
         for index, solution in enumerate(solutions):
-            self.window.solutions_table.insertRow(index)
-            self.window.solutions_table.setItem(index, 0, QTableWidgetItem(str(solution)))
+            self.window.solution_table.insertRow(index)
+            self.window.solution_table.setItem(index, 0, QTableWidgetItem("p" + str(index+1)))
+            self.window.solution_table.setItem(index, 1, QTableWidgetItem(str(solution)))
 
         graph = FigureCanvasQTAgg(figure)
-        self.window.SolutionContainer.itemAt(1).widget().setParent(None)
-        self.window.SolutionContainer.addWidget(graph)
+        self.window.solution_graph.itemAt(0).widget().setParent(None)
+        self.window.solution_graph.addWidget(graph)
         plt.close(figure)
 
