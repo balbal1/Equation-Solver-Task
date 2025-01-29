@@ -1,5 +1,6 @@
-from PySide2.QtWidgets import QTableWidgetItem, QFrame
+from PySide2.QtWidgets import QTableWidgetItem
 from PySide2.QtUiTools import QUiLoader
+from PySide2.QtCore import QThread, Signal
 from logic.Solver import solver
 from logic.Graph import draw_graph
 from logic.Function import Function
@@ -11,11 +12,25 @@ def init_program():
     window = loader.load("src/gui/mainwindow.ui", None)
     return MainWindow(window)
 
+class SolverThread(QThread):
+    finished = Signal(object, object)
+
+    def __init__(self, parent_window):
+        super().__init__()
+        self.parent_window = parent_window
+
+    def run(self):
+        solutions = solver(self.parent_window.function_1.expression, self.parent_window.function_2.expression)
+        figure = draw_graph(self.parent_window.function_1, self.parent_window.function_2, solutions)
+        self.finished.emit(solutions, figure)
+
 class MainWindow:
 
     def __init__(self, window):
 
         self.window = window
+        self.loading = False
+        self.solve_thread = None
 
         self.window.solution_table.setColumnWidth(0, 100)
         self.window.solution_table.setColumnWidth(1, 248)
@@ -27,9 +42,24 @@ class MainWindow:
 
     def solve_handler(self):
 
-        solutions = solver(self.function_1.expression, self.function_2.expression)
+        if self.loading:
+            return
 
-        figure = draw_graph(self.function_1, self.function_2, solutions)
+        if self.function_1.error or self.function_2.error:
+            return
+
+        self.loading = True
+        self.window.solve_button.setText("Processing...")
+        self.window.solve_button.setProperty("isLoading", "true")
+        self.window.solve_button.style().unpolish(self.window.solve_button)
+        self.window.solve_button.style().polish(self.window.solve_button)
+        self.window.solve_button.update()
+
+        self.solve_thread = SolverThread(self)
+        self.solve_thread.finished.connect(self.show_solution)
+        self.solve_thread.start()
+
+    def show_solution(self, solutions, figure):
 
         for index in range(self.window.solution_table.rowCount(), -1, -1):
             self.window.solution_table.removeRow(index)
@@ -44,3 +74,11 @@ class MainWindow:
         self.window.solution_graph.addWidget(graph)
         plt.close(figure)
 
+        self.loading = False
+        self.window.solve_button.setText("Solve")
+        self.window.solve_button.setProperty("isLoading", "false")
+        self.window.solve_button.style().unpolish(self.window.solve_button)
+        self.window.solve_button.style().polish(self.window.solve_button)
+        self.window.solve_button.update()
+    
+        self.solve_thread = None
