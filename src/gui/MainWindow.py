@@ -1,6 +1,6 @@
 from PySide2.QtWidgets import QTableWidgetItem
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtCore import QThread, Signal
+from PySide2.QtCore import QThread, Signal, Qt
 from logic.Solver import solver
 from logic.Graph import draw_graph
 from logic.Function import Function
@@ -13,7 +13,7 @@ def init_program():
     return MainWindow(window)
 
 class SolverThread(QThread):
-    finished = Signal(object, object)
+    finished = Signal(object, object, bool)
 
     def __init__(self, parent_window):
         super().__init__()
@@ -22,7 +22,7 @@ class SolverThread(QThread):
     def run(self):
         solutions = solver(self.parent_window.function_1.expression, self.parent_window.function_2.expression)
         figure = draw_graph(self.parent_window.function_1, self.parent_window.function_2, solutions)
-        self.finished.emit(solutions, figure)
+        self.finished.emit(solutions, figure[0], figure[1])
 
 class MainWindow:
 
@@ -59,15 +59,36 @@ class MainWindow:
         self.solve_thread.finished.connect(self.show_solution)
         self.solve_thread.start()
 
-    def show_solution(self, solutions, figure):
+    def show_solution(self, solutions, figure, same_function):
 
         for index in range(self.window.solution_table.rowCount(), -1, -1):
             self.window.solution_table.removeRow(index)
 
-        for index, solution in enumerate(solutions):
+        if len(solutions) == 0:
+            self.window.solution_table.setColumnWidth(0, 0)
+            self.window.solution_table.setColumnWidth(1, 348)
             self.window.solution_table.insertRow(index)
-            self.window.solution_table.setItem(index, 0, QTableWidgetItem("p" + str(index+1)))
-            self.window.solution_table.setItem(index, 1, QTableWidgetItem(str(solution)))
+            if same_function:
+                message = "The solutions are infinite"
+            else:
+                message = "No solution exists"
+            item = QTableWidgetItem(message)
+            item.setTextAlignment(Qt.AlignCenter)
+            self.window.solution_table.setItem(index, 1, item)
+                
+        else:
+            self.window.solution_table.setColumnWidth(0, 100)
+            self.window.solution_table.setColumnWidth(1, 248)
+            for index, solution in enumerate(solutions):
+                result = str(round(solution, 5))
+                result = f'{result.rstrip("0").rstrip(".") if "." in result else result}'
+                self.window.solution_table.insertRow(index)
+                item = QTableWidgetItem("p" + str(index+1))
+                item.setTextAlignment(Qt.AlignCenter)
+                self.window.solution_table.setItem(index, 0, item)
+                item = QTableWidgetItem(result)
+                item.setTextAlignment(Qt.AlignCenter)
+                self.window.solution_table.setItem(index, 1, item)
 
         graph = FigureCanvasQTAgg(figure)
         self.window.solution_graph.itemAt(0).widget().setParent(None)
