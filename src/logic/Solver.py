@@ -1,6 +1,17 @@
 from sympy import symbols, solve, nsolve, re, im
 
 def solver(expression_1, expression_2):
+    """
+    Solves the two given expressions together.
+
+    Args:
+        expression_1 (object): First input function.
+        expression_2 (object): Second input function.
+    
+    Returns:
+        list: List of all solutions to the two expressions.
+    """
+
     x = symbols('x')
 
     try:

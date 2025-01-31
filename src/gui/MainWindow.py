@@ -7,6 +7,13 @@ from gui.SolveButton import SolveButton
 from gui.SolutionsTable import SolutionsTable
 
 def init_program():
+    """
+    Loads the UI file and initialize main window.
+
+    Returns:
+        MainWindow: The MainWindow of the program.
+    """
+    
     loader = QUiLoader()
     window = loader.load("src/gui/mainwindow.ui", None)
     return MainWindow(window)
@@ -31,6 +38,9 @@ class MainWindow:
         self.function_2.disable.connect(self.button.disable)
 
     def solve_handler(self):
+        """
+        Handles the solve button click event.
+        """
 
         if self.loading:
             return
@@ -46,6 +56,14 @@ class MainWindow:
         self.solve_thread.start()
 
     def show_solution(self, solutions, figure, flag):
+        """
+        Show the solution after solution thread finishes.
+        
+        Args:
+            solutions (list): The list of solution values to display.
+            figure (object): The matplotlib figure object.
+            flag: Boolean that is true if the two functions are the same.
+        """
 
         self.table.show_solution(solutions, flag)
 

@@ -2,3 +2,4 @@ PySide2
 sympy
 matplotlib
 pytest
+pytest-qt

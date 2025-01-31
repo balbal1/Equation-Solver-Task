@@ -3,6 +3,18 @@ from sympy import Float
 import matplotlib.pyplot as plt
 
 def draw_graph(function_1, function_2, solutions):
+    """
+        Creates matplotlib graph containing two functions and their solutions.
+
+        Args:
+            function_1 (Function): First input function.
+            function_2 (Function): Second input function.
+            solutions (list): list of solution values of the two functions.
+        
+        Returns:
+            object: The matplotlib figure object.
+            bool: Boolean that is true if the two functions are the same.
+    """
 
     fig, ax = plt.subplots()
     ax.grid(True, which='both')
@@ -15,7 +27,7 @@ def draw_graph(function_1, function_2, solutions):
     ax.spines['top'].set_color('none')
     ax.xaxis.tick_bottom()
 
-    domain = center_graph(solutions, function_1, function_2)
+    domain = center_graph(function_1, function_2, solutions)
     x_domain = linspace(domain[0], domain[1], 100)
 
     max_y = 6
@@ -53,7 +65,19 @@ def draw_graph(function_1, function_2, solutions):
     plt.legend()
     return fig, same_function
 
-def center_graph(solutions, function_1, function_2):
+def center_graph(function_1, function_2, solutions):
+    """
+    Calculates the x range to draw the function through.
+
+    Args:
+        function_1 (Function): First input function.
+        function_2 (Function): Second input function.
+        solutions (list): list of solution values of the two functions.
+    
+    Returns:
+        list: List contains the minimum x range and maximum x range.
+    """
+
     if solutions == []:
         domain_endpoints = []
         domain_endpoints.extend(list(function_1.get_domain().boundary))

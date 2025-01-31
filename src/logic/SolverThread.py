@@ -10,6 +10,10 @@ class SolverThread(QThread):
         self.parent_window = parent_window
 
     def run(self):
+        """
+        Runs the main solving logic.
+        """
+        
         solutions = solver(self.parent_window.function_1.expression, self.parent_window.function_2.expression)
         figure, flag = draw_graph(self.parent_window.function_1, self.parent_window.function_2, solutions)
         self.finished.emit(solutions, figure, flag)

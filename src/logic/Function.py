@@ -25,6 +25,10 @@ class Function(QObject):
         self.input_change_handler()
 
     def input_change_handler(self):
+        """
+        Handles the event of user changing function input.
+        """
+
         self.error = True
         text = self.input.text()
         if text == "":
@@ -34,6 +38,16 @@ class Function(QObject):
         self.timer.start(100)
 
     def validate_input(self, text):
+        """
+        Check if the input function is valid and parse it.
+
+        Args:
+            text (str): The input function text.
+        
+        Returns:
+            str: Input function latex if valid, else error message.
+        """
+
         try:
             log_found = text.find("log10")
             while log_found != -1:
@@ -63,6 +77,13 @@ class Function(QObject):
             return "Invalid syntax."
 
     def get_domain(self):
+        """
+        Gets domain of the function.
+        
+        Returns:
+            object: Domain set object.
+        """
+
         if self.expression:
             x = symbols('x')
             domain = continuous_domain(self.expression, x, S.Reals)
@@ -71,6 +92,18 @@ class Function(QObject):
             return None
 
     def evaluate_function(self, x_values, min_y, max_y):
+        """
+        Evaluates the function for the given inputs.
+
+        Args:
+            x_values (list): The list of x values to evaluate.
+            min_y (number): The minimum value of y range to return.
+            max_y (number): The maximum value of y range to return.
+        
+        Returns:
+            list: List of corresponding y values for each x input.
+        """
+
         y_values = []
         domain = self.get_domain()
         for value in x_values:
@@ -88,6 +121,10 @@ class Function(QObject):
         return y_values
 
     def draw_function(self):
+        """
+        Updates the render of the function latex or error message.
+        """
+        
         fig, ax = plt.subplots()
         ax.text(0, 0.5, self.text, fontsize=20, ha='left', va='center')
         ax.axis('off')
