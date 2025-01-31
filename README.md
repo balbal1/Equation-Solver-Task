@@ -2,6 +2,8 @@
 
 Python PySide2 program that solves and graphs two functions together.
 
+- [EXE Release](https://github.com/balbal1/Equation-Solver-Task/releases/tag/v1.0)
+
 ### Features
 - Find the solutions of any two functions.
 - Graph the functions and show the solutions points on the graph.
