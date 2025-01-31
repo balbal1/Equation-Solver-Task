@@ -18,37 +18,61 @@ def draw_graph(function_1, function_2, solutions):
     domain = center_graph(solutions, function_1, function_2)
     x_domain = linspace(domain[0], domain[1], 100)
 
-    x1_values = []
-    y1_values = []
-    x2_values = []
-    y2_values = []
-    for value in x_domain:
-        if function_1.get_domain().contains(value):
-            x1_values.append(value)
-            y1_values.append(Float(function_1.lambda_function(value)).evalf())
-        if function_2.get_domain().contains(value):
-            x2_values.append(value)
-            y2_values.append(Float(function_2.lambda_function(value)).evalf())
-    plt.plot(x1_values, y1_values, label='f(x)')
-    plt.plot(x2_values, y2_values, label='g(x)')
-
+    max_y = 6
+    min_y = -6
     same_function = False
     if len(solutions) == 0:
         same_function = True
-        for i in range(len(y1_values)):
-            if not allclose(float(y1_values[i]), float(y2_values[i])):
-                same_function = False
-                break
     else:
         for index, value in enumerate(solutions):
             y_value = Float(function_1.lambda_function(value)).evalf()
+            min_y = min(min_y, y_value)
+            max_y = max(max_y, y_value)
             alignment = "top" if y_value >= 0 else "bottom"
             plt.text(value, 0, "p" + str(index+1), fontsize=12, ha='center', va=alignment)
             plt.plot([value, value], [0, y_value], color='red')
             plt.scatter(value, y_value, color='red', s=50, zorder=5)
 
+    min_y *= 2.5
+    max_y *= 2.5
+
+    y1_values = []
+    y2_values = []
+    for value in x_domain:
+        if function_1.get_domain().contains(value):
+            try:
+                y_value = Float(function_1.lambda_function(value)).evalf()
+            except:
+                y_value = Float(function_1.lambda_function(value).evalf()).evalf()
+            if min_y < y_value and y_value < max_y:
+                y1_values.append(y_value)
+            else:
+                y1_values.append(float('NaN'))
+        else:
+            y1_values.append(float('NaN'))
+        if function_2.get_domain().contains(value):
+            try:
+                y_value = Float(function_2.lambda_function(value)).evalf()
+            except:
+                y_value = Float(function_2.lambda_function(value).evalf()).evalf()
+            if min_y < y_value and y_value < max_y:
+                y2_values.append(y_value)
+            else:
+                y2_values.append(float('NaN'))
+        else:
+            y2_values.append(float('NaN'))
+    plt.plot(x_domain, y1_values, label='f(x)')
+    plt.plot(x_domain, y2_values, label='g(x)')
+
+    if same_function:
+        for i in range(len(y1_values)):
+            if not allclose(float(y1_values[i]), float(y2_values[i])):
+                same_function = False
+                break
+
+
     plt.legend()
-    return [fig, same_function]
+    return fig, same_function
 
 def center_graph(solutions, function_1, function_2):
     if solutions == []:

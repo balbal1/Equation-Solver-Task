@@ -1,21 +1,20 @@
-from sympy import symbols, solve, nsolve, solveset, S, re, im
+from sympy import symbols, solve, nsolve, re, im
 
 def solver(expression_1, expression_2):
     x = symbols('x')
 
-
     try:
-        solutions = solve(expression_1 - expression_2, x)
+        unfiltered_solutions = solve(expression_1 - expression_2, x)
     
-        solutions_filtered = []
-        for solution in solutions:
+        solutions = []
+        for solution in unfiltered_solutions:
             solution_eval = solution.evalf()
             if abs(im(solution_eval)) < 1e-10:
-                solutions_filtered.append(re(solution_eval))
+                solutions.append(re(solution_eval))
 
-        return solutions_filtered
     except Exception:
-        solutions = []
+
+        solutions = []        
         for guess in range(-100, 100, 10):
             try:
                 solution = nsolve(expression_1 - expression_2, x, guess)
@@ -24,7 +23,11 @@ def solver(expression_1, expression_2):
             except Exception:
                 pass
 
-        return solutions        
+    rounded_solutions = []
+    for solution in solutions:
+        rounded_solutions.append(round(float(solution), 5))
+
+    return rounded_solutions
 
     # if solutions.__class__.__name__ == "FiniteSet":
     #     return list(solutions)

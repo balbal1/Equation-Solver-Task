@@ -21,8 +21,8 @@ class SolverThread(QThread):
 
     def run(self):
         solutions = solver(self.parent_window.function_1.expression, self.parent_window.function_2.expression)
-        figure = draw_graph(self.parent_window.function_1, self.parent_window.function_2, solutions)
-        self.finished.emit(solutions, figure[0], figure[1])
+        figure, flag = draw_graph(self.parent_window.function_1, self.parent_window.function_2, solutions)
+        self.finished.emit(solutions, figure, flag)
 
 class MainWindow:
 
@@ -51,9 +51,7 @@ class MainWindow:
         self.loading = True
         self.window.solve_button.setText("Processing...")
         self.window.solve_button.setProperty("isLoading", "true")
-        self.window.solve_button.style().unpolish(self.window.solve_button)
-        self.window.solve_button.style().polish(self.window.solve_button)
-        self.window.solve_button.update()
+        self.render_solve_button()
 
         self.solve_thread = SolverThread(self)
         self.solve_thread.finished.connect(self.show_solution)
@@ -80,13 +78,11 @@ class MainWindow:
             self.window.solution_table.setColumnWidth(0, 100)
             self.window.solution_table.setColumnWidth(1, 248)
             for index, solution in enumerate(solutions):
-                result = str(round(solution, 5))
-                result = f'{result.rstrip("0").rstrip(".") if "." in result else result}'
                 self.window.solution_table.insertRow(index)
                 item = QTableWidgetItem("p" + str(index+1))
                 item.setTextAlignment(Qt.AlignCenter)
                 self.window.solution_table.setItem(index, 0, item)
-                item = QTableWidgetItem(result)
+                item = QTableWidgetItem(str(solution))
                 item.setTextAlignment(Qt.AlignCenter)
                 self.window.solution_table.setItem(index, 1, item)
 
@@ -98,8 +94,11 @@ class MainWindow:
         self.loading = False
         self.window.solve_button.setText("Solve")
         self.window.solve_button.setProperty("isLoading", "false")
+        self.render_solve_button()
+    
+        self.solve_thread = None
+
+    def render_solve_button(self):
         self.window.solve_button.style().unpolish(self.window.solve_button)
         self.window.solve_button.style().polish(self.window.solve_button)
         self.window.solve_button.update()
-    
-        self.solve_thread = None

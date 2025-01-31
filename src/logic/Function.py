@@ -1,5 +1,6 @@
 from PySide2.QtCore import QTimer
 from sympy import symbols, sympify, lambdify, latex, S
+from sympy.core.function import AppliedUndef
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from sympy.calculus.util import continuous_domain
@@ -44,16 +45,25 @@ class Function:
 
     def validate_input(self, text):
         try:
+            log_found = text.find("log10")
+            while log_found != -1:
+                end = text.index(")", log_found)
+                text = text[:log_found+3] + text[log_found+5:end] + ",10" + text[end:]
+                log_found = text.find("log10")
+                
             self.expression = sympify(text)
             x = symbols('x')
             self.lambda_function = lambdify(x, self.expression, modules=['sympy'])
 
             expression_symbols = self.expression.free_symbols
-            if len(expression_symbols) == 0 or (len(expression_symbols) == 1 and x in expression_symbols):
-                self.error = False
-                return rf'${self.symbol}(x) = {latex(self.expression)}$'
+            if len(expression_symbols) != 0 and (len(expression_symbols) != 1 or x not in expression_symbols):
+                return "Function must only contains the variable x."
+
+            if len(self.expression.atoms(AppliedUndef)) > 0:
+                return f"Unknown function: {list(self.expression.atoms(AppliedUndef))[0]}"
             
-            return "Function must only contains the variable x."
+            self.error = False
+            return rf'${self.symbol}(x) = {latex(self.expression)}$'
             
         except Exception:
             return "Invalid syntax."
