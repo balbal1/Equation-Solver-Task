@@ -38,7 +38,10 @@ def draw_graph(function_1, function_2, solutions):
         same_function = True
     else:
         for index, value in enumerate(solutions):
-            y_value = Float(function_1.lambda_function(value)).evalf()
+            try:
+                y_value = Float(function_1.lambda_function(value)).evalf()
+            except:
+                y_value = Float(function_1.lambda_function(value).evalf()).evalf()                
             min_y = min(min_y, y_value)
             max_y = max(max_y, y_value)
             alignment = "top" if y_value >= 0 else "bottom"

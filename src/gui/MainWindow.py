@@ -1,6 +1,6 @@
 from PySide2.QtUiTools import QUiLoader
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.backends.backend_qt5agg import FigureCanvas
 from logic.Function import Function
 from logic.SolverThread import SolverThread
 from gui.SolveButton import SolveButton
@@ -25,6 +25,7 @@ class MainWindow:
         self.window = window
         self.loading = False
         self.solve_thread = None
+        self.graph_axes = None
 
         self.table = SolutionsTable(self.window.solution_table)
 
@@ -67,9 +68,10 @@ class MainWindow:
 
         self.table.show_solution(solutions, flag)
 
-        graph = FigureCanvasQTAgg(figure)
+        graph = FigureCanvas(figure)
         self.window.solution_graph.itemAt(0).widget().setParent(None)
         self.window.solution_graph.addWidget(graph)
+        self.graph_axes = plt.gca()
         plt.close(figure)
 
         self.loading = False
