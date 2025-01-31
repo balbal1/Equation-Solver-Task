@@ -429,16 +429,16 @@ border-radius: 5px</string>
 	border-radius: 10px;
 }
 
-QPushButton[isLoading="true"] {
-   background-color: #999999;
+QPushButton[is_disabled="true"] {
+   background-color: #777777;
 }
 
 QPushButton:hover {
    background-color: #177F2F;
 }
 
-QPushButton[isLoading="true"]:hover {
-   background-color: #999999;
+QPushButton[is_disabled="true"]:hover {
+   background-color: #555555;
 }</string>
             </property>
             <property name="text">

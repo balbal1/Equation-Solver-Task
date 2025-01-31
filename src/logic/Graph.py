@@ -20,6 +20,7 @@ def draw_graph(function_1, function_2, solutions):
 
     max_y = 6
     min_y = -6
+    
     same_function = False
     if len(solutions) == 0:
         same_function = True
@@ -36,40 +37,18 @@ def draw_graph(function_1, function_2, solutions):
     min_y *= 2.5
     max_y *= 2.5
 
-    y1_values = []
-    y2_values = []
-    for value in x_domain:
-        if function_1.get_domain().contains(value):
-            try:
-                y_value = Float(function_1.lambda_function(value)).evalf()
-            except:
-                y_value = Float(function_1.lambda_function(value).evalf()).evalf()
-            if min_y < y_value and y_value < max_y:
-                y1_values.append(y_value)
-            else:
-                y1_values.append(float('NaN'))
-        else:
-            y1_values.append(float('NaN'))
-        if function_2.get_domain().contains(value):
-            try:
-                y_value = Float(function_2.lambda_function(value)).evalf()
-            except:
-                y_value = Float(function_2.lambda_function(value).evalf()).evalf()
-            if min_y < y_value and y_value < max_y:
-                y2_values.append(y_value)
-            else:
-                y2_values.append(float('NaN'))
-        else:
-            y2_values.append(float('NaN'))
+    y1_values = function_1.evaluate_function(x_domain, min_y, max_y)
     plt.plot(x_domain, y1_values, label='f(x)')
+    
+    y2_values = function_2.evaluate_function(x_domain, min_y, max_y)
     plt.plot(x_domain, y2_values, label='g(x)')
 
     if same_function:
         for i in range(len(y1_values)):
-            if not allclose(float(y1_values[i]), float(y2_values[i])):
-                same_function = False
-                break
-
+            if y1_values[i] == y1_values[i] and y2_values[i] == y2_values[i]:
+                if not allclose(float(y1_values[i]), float(y2_values[i])):
+                    same_function = False
+                    break
 
     plt.legend()
     return fig, same_function
